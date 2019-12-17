@@ -3,7 +3,6 @@ import { Button, Input } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import Container from '../../Components/Container';
-import API from '../../api';
 import Axios from 'axios';
 
 export default class Main extends Component {
@@ -27,28 +26,23 @@ export default class Main extends Component {
         e.preventDefault();
         Axios.get(`https://jsonplaceholder.typicode.com/users`)
             .then(resp => {
-                resp.filter( user => user.username === this.state.username)
-                console.log('1', resp.data);
-            })
-            .then(res => {
-                res.filter(
-                    user => console.log('inside' + user),
-
-                /*     user.username === this.state.username &&
-                        user.email === this.state.password */
+                let user = resp.data.find(
+                    object => object['username'] === this.state.username
                 );
-                console.log('2' + res.data);
-            })
-            .then(response => {
-                console.log('LOGIN RESPONSE' + response);
-                alert('Sesión iniciada');
-                this.props.userHasAuthenticated(true);
-                localStorage.setItem('username', response.data.username);
-                localStorage.setItem('userId', response.data.id);
+                console.log('is there', user);
 
-                this.setState({
-                    isLoading: false,
-                });
+                let isValidPass = user.email === this.state.password;
+                if (isValidPass) {
+                    alert('Sesión iniciada');
+                    this.props.userHasAuthenticated(true);
+                    localStorage.setItem('username', user.username);
+                    localStorage.setItem('userId', user.id);
+                    localStorage.setItem('user', user);
+                    console.log('localstorage', localStorage.getItem('user'));
+                    this.setState({
+                        isLoading: false,
+                    });
+                }
             })
             .catch(error => {
                 alert('Wrong Data' + error);
@@ -58,7 +52,7 @@ export default class Main extends Component {
 
     render() {
         if (this.props.isAuthenticated) {
-            return <Redirect to="/PostList" props={this.state} />;
+            return <Redirect to="/post" props={this.props} />;
         } else {
             return (
                 <Container>

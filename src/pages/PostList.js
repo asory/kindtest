@@ -5,8 +5,6 @@ import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import axios from 'axios';
-import { format } from 'date-fns';
-import API from '../api';
 
 class PostList extends React.Component {
     constructor(props) {
@@ -15,17 +13,16 @@ class PostList extends React.Component {
             posts: {},
             isLoading: true,
             error: false,
+            user: {},
         };
     }
 
     loadData = () => {
         axios
-            .get('https://jsonplaceholder.typicode.com/users/1/posts', {
-                userId: this.props.userId,
-            })
+            .get(`https:jsonplaceholder.typicode.com/users/${this.state.user.id}/posts`)
             .then(response => {
                 this.setState({
-                    Post: response.data,
+                    posts: response.data,
                     isLoading: false,
                 });
             })
@@ -65,12 +62,12 @@ class PostList extends React.Component {
             <div>
                 <NavBar props={this.props} />
                 <List>
-                    {this.state.persons.map(posts => {
+                    {this.state.posts.map(post => {
                         return (
-                            <ListItem alignItems="flex-start">
+                            <ListItem  key={post.id} alignItems="flex-start">
                                 <ListItemText
-                                    primary={posts.title}
-                                    secondary={posts.body}
+                                    primary={post.title}
+                                    secondary={post.body}
                                 />
                                 <Divider variant="inset" component="li" />
                             </ListItem>
