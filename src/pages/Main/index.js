@@ -33,12 +33,10 @@ export default class Main extends Component {
 
                 let isValidPass = user.email === this.state.password;
                 if (isValidPass) {
-                    alert('Sesión iniciada');
+                    alert('WELCOME BACK');
                     this.props.userHasAuthenticated(true);
                     localStorage.setItem('username', user.username);
                     localStorage.setItem('userId', user.id);
-                    localStorage.setItem('user', user);
-                    console.log('localstorage', localStorage.getItem('user'));
                     this.setState({
                         isLoading: false,
                     });
@@ -57,16 +55,18 @@ export default class Main extends Component {
             return (
                 <Container>
                     <div>
-                        <h1>UMBRELLACORP</h1>
-                    </div>
-                    <div>
-                        <form onSubmit={this.submitHandler}>
+                        <h1 style={{ padding: '40px' }}> UMBRELLACORP</h1>
+
+                        <form onSubmit={this.submitHandler} display="flex">
                             <Input
                                 name="username"
                                 type="text"
                                 color="primary"
                                 placeholder="Username"
                                 onChange={this.changeHandler}
+                                fullWidth={true}
+                                style={{ margin:"15px"}}
+
                             ></Input>
                             <br />
                             <Input
@@ -75,14 +75,18 @@ export default class Main extends Component {
                                 color="primary"
                                 placeholder="Password"
                                 onChange={this.changeHandler}
+                                fullWidth={true}
+                                style={{ margin:"15px"}}
                             ></Input>
                             <br />
 
                             <Button
+                                alignSelf="center"
                                 variant="contained"
                                 color="primary"
                                 type="submit"
                                 disabled={!this.validateForm()}
+                                style={{marginLeft:"40%", marginTop:"5%"}}
                             >
                                 Sign IN
                             </Button>

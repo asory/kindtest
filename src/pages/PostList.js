@@ -3,8 +3,14 @@ import NavBar from '../Components/navBar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import axios from 'axios';
+import { Button, CardContent, CardActions, Card } from '@material-ui/core';
+import { Redirect } from 'react-router-dom';
 
 class PostList extends React.Component {
     constructor(props) {
@@ -19,7 +25,9 @@ class PostList extends React.Component {
 
     loadData = () => {
         axios
-            .get(`https:jsonplaceholder.typicode.com/users/${this.state.user.id}/posts`)
+            .get(
+                `https:jsonplaceholder.typicode.com/users/${this.state.user.id}/posts`
+            )
             .then(response => {
                 this.setState({
                     posts: response.data,
@@ -42,7 +50,7 @@ class PostList extends React.Component {
     }
 
     render() {
-        const { isLoading, error, posts } = this.state;
+        const { isLoading, error } = this.state;
 
         if (isLoading) {
             return <h1>Loading ...</h1>;
@@ -51,7 +59,7 @@ class PostList extends React.Component {
             return (
                 <div>
                     <NavBar />
-                    <h1>
+                    <h1 padding={'12%'}>
                         There was an error loading . ヾ"("＾∇＾")"
                         <button onClick={this.loadData}>Try again</button>
                     </h1>
@@ -61,14 +69,34 @@ class PostList extends React.Component {
         return (
             <div>
                 <NavBar props={this.props} />
-                <List>
+                <List style={{ maxWidth: '50%', margin: 'auto' }}>
                     {this.state.posts.map(post => {
                         return (
-                            <ListItem  key={post.id} alignItems="flex-start">
-                                <ListItemText
-                                    primary={post.title}
-                                    secondary={post.body}
-                                />
+                            <ListItem key={post.id} alignItems="center">
+                                <Card>
+                                    <CardContent>
+                                        <Typography
+                                            color="textSecondary"
+                                            gutterBottom
+                                        >
+                                            {this.state.user.username}{' '}
+                                        </Typography>
+                                        <Typography variant="h5" component="h2" style={{textAlign:"center"}}>
+                                            {post.title}
+                                        </Typography>
+
+                                        <Typography
+                                            variant="body2"
+                                            component="p"
+                                        >
+                                            {post.body}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small" color= "primary">Comments</Button>
+                                    </CardActions>
+                                </Card>
+
                                 <Divider variant="inset" component="li" />
                             </ListItem>
                         );
